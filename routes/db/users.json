@@ -1,0 +1,26 @@
+{
+    "Johna": {
+        "displayname": "Johna",
+        "password": "changeme",
+        "avatar": false,
+        "bio": "",
+        "pfptype": "none",
+        "admin": false
+    },
+    "vasiluy": {
+        "displayname": "vasiluy",
+        "password": "changeme",
+        "avatar": false,
+        "bio": "",
+        "pfptype": "none",
+        "admin": false
+    },
+    "John": {
+        "displayname": "John",
+        "password": "changeme",
+        "avatar": false,
+        "bio": "",
+        "pfptype": "none",
+        "admin": false
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "1": {
+        "name": "cockballs",
+        "type": "group",
+        "members": [
+            "John",
+            "Vasily"
+        ],
+        "messages": [
+            {
+                "content": "oh no",
+                "id": 1,
+                "author": "John",
+                "timestamp": 328193791273
+            },
+            {
+                "content": "gabriel body pillow",
+                "id": 2,
+                "author": "Vasily",
+                "timestamp": 328193791277
+            },
+            {
+                "content": "balllllllllllllllls",
+                "id": 3,
+                "author": "John",
+                "timestamp": 1729010488461
+            },
+            {
+                "content": "balllllllllllllllls",
+                "id": 4,
+                "author": "John",
+                "timestamp": 1729010636604
+            },
+            {
+                "content": "hi guys",
+                "id": 5,
+                "author": "John",
+                "timestamp": 1729011004507
+            }
+        ]
+    }
+}
