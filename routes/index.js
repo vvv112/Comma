@@ -4,6 +4,12 @@ const fs = require('node:fs');
 
 var ver = "0.1.0"
 
+var debug = true
+
+if (debug) {
+  console.log("DEBUG MODE")
+}
+
 // STORAGE INIT
 
 const JSONdb = require('simple-json-db');
@@ -50,7 +56,7 @@ router.post('/api/login/', function(req, res, next) {
 
   if (userdb.get(req.body.name).password === req.body.password) {
     console.info("Successful login for " + req.body.name)
-    res.sendStatus(200)
+    res.send(userdb.get(req.body.name).token)
   } else  {
     console.warn("Failed login attempt for " + req.body.name)
     res.sendStatus(401)
@@ -58,20 +64,22 @@ router.post('/api/login/', function(req, res, next) {
 });
 
 router.post('/api/account/register/', function(req, res, next) {
-  if (typeof userdb.get(req.body.name) === "undefined") {
-    userdb.set(req.body.name,
+  let tokenmem = gentoken()
+  if (typeof userdb.get(tokenmem) === "undefined") {
+    userdb.set(tokenmem,
       {
         displayname: req.body.name,
       password: req.body.password,
       avatar: false,
       bio: "",
       pfptype: "none",
-      admin: false
+      admin: false,
+      username: req.body.name
     }
     )
     res.sendStatus(201)
   } else {
-    res.send("exists")
+    res.send("ultra rare error, try again")
   }
 });
 
@@ -107,14 +115,16 @@ router.get('/api/account/pfp/get/', function(req, res, next) {
 
 router.get('/api/chats/check/', function(req, res, next) {
   /* Я ожидаю от юзера следующие данные:
-    Его логин и пароль и айди чата
+   /// УСТАРЕЛО /// Его логин и пароль и айди чата
+   
+   теперь я жду его токен и айди чата
 
     это функция проверки состоит ли юзер в чате
   */
-    if(typeof userdb.get(req.body.name)/*accounts[req.body.name]*/ === "undefined") {
+    if(typeof userdb.get(req.body.token)/*accounts[req.body.name]*/ === "undefined") {
       res.sendStatus(401)
     } else {
-  if (userdb.get(req.body.name).password === req.body.password) {
+//  if (userdb.get(req.body.token) === req.body.token) {
     if (typeof chatdb.get(req.body.chatid) != "undefined") {
       if (chatdb.get(req.body.chatid).members.includes(req.body.name)) {
         res.sendStatus(200)
@@ -124,10 +134,10 @@ router.get('/api/chats/check/', function(req, res, next) {
     } else {
       res.sendStatus(204)
     }
-  } else {
+//  } else {
     res.sendStatus(401)
   }
-}});
+}/*}*/);
 
 router.post('/api/chats/send/', function(req, res, next) {
   /* Я ожидаю от юзера следующие данные:
@@ -197,5 +207,31 @@ router.get('/api/chats/getall/', function(req, res, next) {
     res.sendStatus(401)
   }
 }});
+
+
+// FUNCTIONS
+
+router.get('/test/tokengen/', function(req, res, next) {
+  if (debug) {
+  res.send(gentoken());
+  } else {
+    res.sendStatus(404)
+  }
+});
+
+function gentoken() {
+  let result = '';
+  let length = 64
+  const characters = 'qQwWeErRtTyYuUiIoOpPaAsSdDfFgGhHjJkKlLzZxXcCvVbBnNmM1234567890!#$%^}{[];'
+  
+
+  for (let i = 0; i < length; i++) {
+      const randomInd = Math.floor(Math.random() * characters.length);
+      result += characters.charAt(randomInd);
+  }
+
+return result
+}
+
 
 module.exports = router;
