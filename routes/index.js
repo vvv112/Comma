@@ -81,7 +81,7 @@ router.post('/api/account/register/', function(req, res, next) {
       }
 
     )
-    umapdb.set(req.body.name, token)
+    umapdb.set(req.body.name, tokenmem)
     res.sendStatus(201)
   } else {
     res.send("ultra rare error, try again")
