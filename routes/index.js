@@ -1,4 +1,5 @@
 var express = require('express');
+const { token } = require('morgan');
 var router = express.Router();
 const fs = require('node:fs');
 
@@ -15,6 +16,8 @@ if (debug) {
 const JSONdb = require('simple-json-db');
 const userdb = new JSONdb(__dirname + '/db/users.json');
 const chatdb = new JSONdb(__dirname + '/db/chats.json');
+const umapdb = new JSONdb(__dirname + '/db/usermapdb.json');
+
 
 //
 
@@ -75,8 +78,10 @@ router.post('/api/account/register/', function(req, res, next) {
       pfptype: "none",
       admin: false,
       username: req.body.name
-    }
+      }
+
     )
+    umapdb.set(req.body.name, token)
     res.sendStatus(201)
   } else {
     res.send("ultra rare error, try again")
@@ -121,12 +126,15 @@ router.get('/api/chats/check/', function(req, res, next) {
 
     это функция проверки состоит ли юзер в чате
   */
+
+        // TODO: сделать функцию которую может вызвать любой мембер чата для проверки какие юзеры есть в чате
+
     if(typeof userdb.get(req.body.token)/*accounts[req.body.name]*/ === "undefined") {
       res.sendStatus(401)
     } else {
 //  if (userdb.get(req.body.token) === req.body.token) {
     if (typeof chatdb.get(req.body.chatid) != "undefined") {
-      if (chatdb.get(req.body.chatid).members.includes(req.body.name)) {
+      if (chatdb.get(req.body.chatid).members.includes(/*req.body.name*/userdb.get(req.body.token).username)) {
         res.sendStatus(200)
       } else {
         res.sendStatus(204) // 204
@@ -141,7 +149,7 @@ router.get('/api/chats/check/', function(req, res, next) {
 
 router.post('/api/chats/send/', function(req, res, next) {
   /* Я ожидаю от юзера следующие данные:
-    Его логин и пароль и айди чата, сообщение
+    Его ~~логин и пароль~~ ТОКЕН и айди чата, сообщение
 
     это функция для отправки сообщения
   */
@@ -233,5 +241,12 @@ function gentoken() {
 return result
 }
 
+function finduname(username) {
+  if(umapdb.has(username)) {
+    return umapdb.get(username)
+  } else {
+    return null
+  }
+}
 
 module.exports = router;
