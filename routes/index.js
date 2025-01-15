@@ -196,9 +196,9 @@ router.get('/api/chats/getall/', function(req, res, next) {
     if(/*typeof */userdb.has(req.body.token)/*accounts[req.body.name] === "undefined"*/) {
       res.sendStatus(401)
     } else {
-  if (userdb.get(req.body.name).password === req.body.password) {
+  // if (userdb.get(req.body.name).password === req.body.password) {
     if (typeof chatdb.get(req.body.chatid) != "undefined") {
-      if (chatdb.get(req.body.chatid).members.includes(req.body.name)) {
+      if (chatdb.get(req.body.chatid).members.includes(userdb.get(req.body.token).name)) {
         
        
 
@@ -211,9 +211,9 @@ router.get('/api/chats/getall/', function(req, res, next) {
     } else {
       res.sendStatus(204)
     }
-  } else {
+  /*} else {
     res.sendStatus(401)
-  }
+  }*/
 }});
 
 
