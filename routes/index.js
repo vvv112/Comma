@@ -153,19 +153,19 @@ router.post('/api/chats/send/', function(req, res, next) {
 
     это функция для отправки сообщения
   */
-    if(typeof userdb.get(req.body.name)/*accounts[req.body.name]*/ === "undefined") {
+    if(typeof userdb.get(req.body.token)/*accounts[req.body.name]*/ === "undefined") {
       res.sendStatus(401)
     } else {
-  if (userdb.get(req.body.name).password === req.body.password) {
+  if (userdb.has(req.body.token)) {
     if (typeof chatdb.get(req.body.chatid) != "undefined") {
-      if (chatdb.get(req.body.chatid).members.includes(req.body.name)) {
+      if (chatdb.get(req.body.chatid).members.includes(userdb.get(req.body.token).username)) {
         
         let dblivecopy = chatdb.JSON(); 
 
         dblivecopy[req.body.chatid].messages.push(
         {  "content": req.body.message,
           "id": dblivecopy[req.body.chatid].messages.length + 1,
-          "author": req.body.name,
+          "author": userdb.get(req.body.token).username,
           "timestamp": Date.now()}
         )
 
@@ -189,11 +189,11 @@ router.post('/api/chats/send/', function(req, res, next) {
 
 router.get('/api/chats/getall/', function(req, res, next) {
   /* Я ожидаю от юзера следующие данные:
-    Его логин и пароль и айди чата
+    Его ~~логин, пароль~~ токен и айди чата
 
     это функция для получения ВСЕХ сообщений в чате
   */
-    if(typeof userdb.get(req.body.name)/*accounts[req.body.name]*/ === "undefined") {
+    if(/*typeof */userdb.has(req.body.token)/*accounts[req.body.name] === "undefined"*/) {
       res.sendStatus(401)
     } else {
   if (userdb.get(req.body.name).password === req.body.password) {
